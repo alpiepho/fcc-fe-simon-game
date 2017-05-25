@@ -1,9 +1,4 @@
 
-
-// TODO: add user moves
-// TODO: add timed user moves??
-// TODO: fix off problem, possible refactor how big buttons are turned on and off
-
 // button timer
 var timer1    = null;
 
@@ -199,11 +194,6 @@ function gameTimer() {
         break;
       case simon.USERMOVES:
         userOn = true;
-        /*
-      // HACK
-      simon._move = 20;
-      simon.move("red");
-      */
         break;
       case simon.SEQFAIL:
         playSound("fail");
@@ -254,17 +244,11 @@ class Simon {
 
     this.MAXSTEPS = 20;
     this.STEP1    = 0;
-    this.RATE1    = 2000;
+    this.RATE1    = 800;
     this.STEP2    = 9;
-    this.RATE2    = 1000;
+    this.RATE2    = 600;
     this.STEP3    = 15;
-    this.RATE3    = 500;
-
-    // DEBUG
-    //this.RATE1    = 200;
-    //this.RATE2    = 100;
-    //this.RATE3    = 50;
-
+    this.RATE3    = 400;
 
     this.PLAYBACK   = 0;
     this.USERMOVES  = 1;
@@ -279,8 +263,8 @@ class Simon {
     var rate = 1000;
     for (var i=0; i<this.MAXSTEPS; i++) {
       // DEBUG
-      this._sequence[i] = (i%this.COLORMAX) + this.COLORSTART;
-      //this._sequence[i] = Math.floor(Math.random() * this.COLORMAX) + this.COLORSTART;
+      //this._sequence[i] = (i%this.COLORMAX) + this.COLORSTART;
+      this._sequence[i] = Math.floor(Math.random() * this.COLORMAX) + this.COLORSTART;
       if (i == this.STEP1) rate = this.RATE1;
       if (i == this.STEP2) rate = this.RATE2;
       if (i == this.STEP3) rate = this.RATE3;
@@ -308,14 +292,14 @@ class Simon {
     var result = this._sequence[this._step];
     this._step++;
     if (this._step >= this._steps) {
+      //rate = 400; // shorten last step so user can start faster
       this._status = this.USERMOVES;
     }
     return [result, rate];
   }
 
   move(color) {
-    console.log(this._move + "; color: " + color);
-    //var rate = -1;
+    //console.log(this._move + "; color: " + color);
     if (this._move >= this._steps-1) {
       this._status = this.SEQPASSED;
       if (this._step >= this.MAXSTEPS) {
@@ -323,17 +307,11 @@ class Simon {
       }
     } else {
       if (color != this._sequence[this._move]) {
-        console.log("SEQFAIL");
-        console.log(color);
-        console.log(this._move);
-        console.log(this._sequence[this._move]);
         this._status = this.SEQFAIL;
       } else {
         this._move++;
-        //rate = this._rates[this._move];
       }
     }
-    //return rate;
   }
 
   level() {
