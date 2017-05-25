@@ -16,6 +16,7 @@ var timer2    = null;
 var rate2     = 1000;
 var delay2    = 1000;
 var lastId    = "";
+var userOn    = false;
 
 // win indicator timer
 var timer3    = null;
@@ -84,7 +85,14 @@ function handleBigButton(id) {
   playSound(id);
   $(".btn-" + id).addClass("btn-" + id + "-on");
   buttonTimer();
+  if (userOn) {
+    if (id == "green")  simon.move(simon.COLORGREEN);
+    if (id == "red")    simon.move(simon.COLORRED);
+    if (id == "blue")   simon.move(simon.COLORBLUE);
+    if (id == "yellow") simon.move(simon.COLORYELLOW);
+  }
 }
+
 
 function handleStartButton() {
   if (!deviceOn || timer1 !== null) {
@@ -179,6 +187,7 @@ function gameTimer() {
   timer2 = setInterval(function() {
     var status = simon.status();
     //console.log("status " + status);
+    userOn = false;
     switch (status) {
       case simon.PLAYBACK:
         [move, newRate] = simon.next();
@@ -189,9 +198,12 @@ function gameTimer() {
         }
         break;
       case simon.USERMOVES:
+        userOn = true;
+        /*
       // HACK
       simon._move = 20;
       simon.move("red");
+      */
         break;
       case simon.SEQFAIL:
         playSound("fail");
@@ -249,9 +261,9 @@ class Simon {
     this.RATE3    = 500;
 
     // DEBUG
-    this.RATE1    = 200;
-    this.RATE2    = 100;
-    this.RATE3    = 50;
+    //this.RATE1    = 200;
+    //this.RATE2    = 100;
+    //this.RATE3    = 50;
 
 
     this.PLAYBACK   = 0;
@@ -267,8 +279,8 @@ class Simon {
     var rate = 1000;
     for (var i=0; i<this.MAXSTEPS; i++) {
       // DEBUG
-      //this._sequence[i] = (i%this.COLORMAX) + this.COLORSTART;
-      this._sequence[i] = Math.floor(Math.random() * this.COLORMAX) + this.COLORSTART;
+      this._sequence[i] = (i%this.COLORMAX) + this.COLORSTART;
+      //this._sequence[i] = Math.floor(Math.random() * this.COLORMAX) + this.COLORSTART;
       if (i == this.STEP1) rate = this.RATE1;
       if (i == this.STEP2) rate = this.RATE2;
       if (i == this.STEP3) rate = this.RATE3;
@@ -276,7 +288,7 @@ class Simon {
     }
     this._step   = 0;
     this._steps  = 1;
-    this._user   = 0;
+    this._move   = 0;
     this._status = this.PLAYBACK;
   }
 
@@ -296,30 +308,32 @@ class Simon {
     var result = this._sequence[this._step];
     this._step++;
     if (this._step >= this._steps) {
-// HACK HERE
       this._status = this.USERMOVES;
     }
     return [result, rate];
   }
 
   move(color) {
-    var rate = -1;
-    if (this._move >= this._steps) {
-      console.log("SEQPASSED");
+    console.log(this._move + "; color: " + color);
+    //var rate = -1;
+    if (this._move >= this._steps-1) {
       this._status = this.SEQPASSED;
       if (this._step >= this.MAXSTEPS) {
         this._status = this.ALLPASSED;
-        console.log("ALLPASSED");
       }
     } else {
-      if (color != this.sequence[this._move]) {
+      if (color != this._sequence[this._move]) {
+        console.log("SEQFAIL");
+        console.log(color);
+        console.log(this._move);
+        console.log(this._sequence[this._move]);
         this._status = this.SEQFAIL;
       } else {
         this._move++;
-        rate = this._rates[this._move];
+        //rate = this._rates[this._move];
       }
     }
-    return rate;
+    //return rate;
   }
 
   level() {
