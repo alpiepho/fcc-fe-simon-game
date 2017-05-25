@@ -1,12 +1,20 @@
 
+// button timer
 var timer1    = null;
+
 var deviceOn  = false;
 var strictOn  = false;
 
+// game timer
 var simon;
 var timer2    = null;
 var rate2     = 1000;
 var delay2    = 1000;
+var lastId    = "";
+
+// win indicator timer
+var timer3    = null;
+var count3    = 0;
 
 function setDeviceOff() {
   deviceOn = false;
@@ -19,6 +27,7 @@ function setDeviceOff() {
   $(".btn-red").addClass("btn-red-off");
   $(".btn-blue").addClass("btn-blue-off");
   $(".btn-yellow").addClass("btn-yellow-off");
+  $(".counter").text("00");
   $(".counter").addClass("counter-off");
   $(".btn-strict-led").addClass("btn-strict-led-off");
   $(".btn-on").addClass("btn-on-off");
@@ -34,6 +43,7 @@ function setDeviceOn() {
   $(".btn-blue").removeClass("btn-blue-off");
   $(".btn-yellow").removeClass("btn-yellow-off");
   $(".counter").removeClass("counter-off");
+  $(".counter").text("00");
   $(".btn-on").removeClass("btn-on-off");
   $(".btn-off").removeClass("btn-off-off");
 }
@@ -50,6 +60,13 @@ function buttonTimer() {
   }, 100);
 }
 
+function setCounter(level) {
+  if (level < 10)
+    $(".counter").text("0" + level);
+  else
+    $(".counter").text(level);
+}
+
 function playSound(id) {
   $("#audio-" + id)[0].play();
 }
@@ -58,6 +75,7 @@ function handleBigButton(id) {
   if (!deviceOn || timer1 !== null) {
     return;
   }
+  lastId = id;
   playSound(id);
   $(".btn-" + id).addClass("btn-" + id + "-on");
   buttonTimer();
@@ -89,6 +107,16 @@ function handleStrictButton(id) {
   else
     $(".btn-strict-led").addClass("btn-strict-led-off");
   buttonTimer();
+}
+
+function winIndicator() {
+  timer3 = setTimeout(function() {
+    handleBigButton(lastId);
+    count3--;
+    if (count3 > 0)
+      winIndicator();
+  }, 600);
+
 }
 
 $(document).ready(function() {
@@ -159,26 +187,24 @@ function gameTimer() {
           gameTimer();
         }
         break;
-/*
       case simon.USERMOVES:
         break;
       case simon.SEQFAIL:
         playSound("fail");
         clearInterval(timer2);
         if (!strictOn) {
-          // restart game
+          // TODO: restart game at last point
           runGame();
         }
         break;
       case simon.SEQPASSED:
         break;
       case simon.ALLPASSED:
-        break;
-*/
-      default:
-        playSound("fail");
-        console.log("stopping game timer");
+        count3 = 5;
+        winIndicator();
         clearInterval(timer2);
+        break;
+      default:
         break;
                   }
     console.log("at rate " + this.rate2);
@@ -190,6 +216,7 @@ function runGame() {
   timer2 = setTimeout(function() {
     // start game
     simon.start();
+    setCounter(simon.level());
     // get first playback
     [move, this.rate2] = simon.next();
     console.log("start game");
@@ -234,8 +261,9 @@ class Simon {
     this._rates    = [];
     var rate = 1000;
     for (var i=0; i<this.MAXSTEPS; i++) {
-      // TODO: add random
-      this._sequence[i] = (i%this.COLORMAX) + this.COLORSTART;
+      // DEBUG
+      //this._sequence[i] = (i%this.COLORMAX) + this.COLORSTART;
+      this._sequence[i] = Math.floor(Math.random() * this.COLORMAX) + this.COLORSTART;
       if (i == this.STEP1) rate = this.RATE1;
       if (i == this.STEP2) rate = this.RATE2;
       if (i == this.STEP3) rate = this.RATE3;
@@ -255,7 +283,8 @@ class Simon {
     var result = this._sequence[this._step];
     this._step++;
     if (this._step >= this._steps) {
-      this._status = this.USERMOVES;
+// HACK HERE
+      this._status = this.ALLPASSED; //this.USERMOVES;
     }
     return [result, rate];
   }
@@ -276,6 +305,10 @@ class Simon {
       }
     }
     return rate;
+  }
+
+  level() {
+    return this._steps;
   }
 
   status() {
