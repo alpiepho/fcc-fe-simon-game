@@ -1,4 +1,9 @@
 
+
+// TODO: add user moves
+// TODO: add timed user moves??
+// TODO: fix off problem, possible refactor how big buttons are turned on and off
+
 // button timer
 var timer1    = null;
 
@@ -116,7 +121,6 @@ function winIndicator() {
     if (count3 > 0)
       winIndicator();
   }, 600);
-
 }
 
 $(document).ready(function() {
@@ -174,7 +178,7 @@ function gameTimer() {
   // set timer for playback/moves
   timer2 = setInterval(function() {
     var status = simon.status();
-    console.log("status " + status);
+    //console.log("status " + status);
     switch (status) {
       case simon.PLAYBACK:
         [move, newRate] = simon.next();
@@ -185,16 +189,21 @@ function gameTimer() {
         }
         break;
       case simon.USERMOVES:
+      // HACK
+      simon._move = 20;
+      simon.move("red");
         break;
       case simon.SEQFAIL:
         playSound("fail");
         if (strictOn) {
           clearInterval(timer2);
         } else {
-          simon.restart();
+          simon.restart(false);
         }
         break;
       case simon.SEQPASSED:
+        simon.restart(true);
+        setCounter(simon.level());
         break;
       case simon.ALLPASSED:
         count3 = 5;
@@ -239,6 +248,12 @@ class Simon {
     this.STEP3    = 15;
     this.RATE3    = 500;
 
+    // DEBUG
+    this.RATE1    = 200;
+    this.RATE2    = 100;
+    this.RATE3    = 50;
+
+
     this.PLAYBACK   = 0;
     this.USERMOVES  = 1;
     this.SEQFAIL    = 2;
@@ -260,15 +275,17 @@ class Simon {
       this._rates[i] = rate;
     }
     this._step   = 0;
-    this._steps  = 5; //1;
+    this._steps  = 1;
     this._user   = 0;
     this._status = this.PLAYBACK;
   }
 
-  restart() {
+  restart(nextSeq) {
     this._step   = 0;
     this._move   = 0;
     this._status = this.PLAYBACK;
+    if (nextSeq)
+      this._steps++;
   }
 
   next() {
@@ -280,7 +297,7 @@ class Simon {
     this._step++;
     if (this._step >= this._steps) {
 // HACK HERE
-      this._status = this.SEQFAIL; //this.USERMOVES;
+      this._status = this.USERMOVES;
     }
     return [result, rate];
   }
@@ -288,9 +305,11 @@ class Simon {
   move(color) {
     var rate = -1;
     if (this._move >= this._steps) {
+      console.log("SEQPASSED");
       this._status = this.SEQPASSED;
-      if (this._steps == this.MAXSTEPS) {
+      if (this._step >= this.MAXSTEPS) {
         this._status = this.ALLPASSED;
+        console.log("ALLPASSED");
       }
     } else {
       if (color != this.sequence[this._move]) {
