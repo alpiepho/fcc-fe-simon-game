@@ -1,0 +1,229 @@
+
+body {
+  background-color: grey;
+}
+
+.game {
+  padding-bottom: 50px;
+  padding-top: 50px;
+  height: 600px;
+  width: 600px;
+  margin: auto;
+}
+
+
+.btn-big {
+  border-style: solid;
+  border-width: 5px;
+  height: 300px;
+  width: 300px;
+}
+
+.btn-green {
+  border-radius: 100% 0 0 0;
+  background-color: rgba(0,255,0,0.5);
+  float: left;
+}
+.btn-green-off {
+  background-color: rgba(0,255,0,0.1);
+}
+.btn-green-on {
+  background-color: rgba(0,255,0,1);
+}
+
+.btn-red {
+  background-color: rgba(255,0,0,0.5);
+  border-radius: 0 100% 0 0;
+  float: right;
+}
+.btn-red-off {
+  background-color: rgba(255,0,0,0.1);
+}
+.btn-red-on {
+  background-color: rgba(255,0,0,1);
+}
+
+.btn-yellow {
+  background-color: rgba(255,255,0,0.5);
+  border-radius: 0 0 0 100%;
+  float: left;
+}
+.btn-yellow-off {
+  background-color: rgba(255,255,0,0.1);
+}.btn-yellow-on {
+  background-color: rgba(255,255,0,1);
+}
+
+.btn-blue {
+  background-color: rgba(0,0,255,0.5);
+  border-radius: 0 0 100% 0;
+  float: right;
+}
+.btn-blue-off {
+  background-color: rgba(0,0,255,0.1);
+}.btn-blue-on {
+  background-color: rgba(0,0,255,1);
+}
+
+
+.control-box {
+  background-color: white;
+  border-radius: 50%;
+  border-width: 5px;
+  border-style: solid;
+  position: absolute;
+  margin-left: 150px;
+  margin-top: 150px;
+  height: 300px;
+  width: 300px;
+}
+
+.game-title {
+  font-size: 3em;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+.cr {
+  font-size: 0.5em;
+  top: 12%;
+  position: absolute;
+}
+
+.counter {
+  background-color: black;
+  border-radius: 5px;
+  color: red;
+  font-size: 2em;
+  height: 50px;
+  width: 70px;
+  margin-left: 40px;
+  float: left;
+}
+.counter-off {
+  color: black;
+}
+
+.btn-start {
+  background-color: rgba(255,0,0,0.5);
+  border-radius: 50%;
+  border-color: black;
+  border-style: solid;
+  border-width: 5px;
+  color: red;
+  font-size: 2em;
+  height: 40px;
+  width: 40px;
+  margin-left: 20px;
+  margin-top: 5px;
+  float: left;
+}
+.btn-start-on {
+  background-color: rgba(255,0,0,1);
+}
+
+.btn-strict-led {
+  background-color: red;
+  border-radius: 50%;
+  border-color: black;
+  border-style: solid;
+  border-width: 1px;
+  color: red;
+  height: 10px;
+  width: 10px;
+  margin-left: 40px;
+  margin-top: -8px;
+  float: left;
+}
+.btn-strict-led-off {
+  background-color: black;
+}
+
+.btn-strict {
+  background-color: rgba(255,255,0,0.5);
+  border-radius: 50%;
+  border-color: black;
+  border-style: solid;
+  border-width: 5px;
+  color: red;
+  height: 40px;
+  width: 40px;
+  margin-left: -25px;
+  margin-top: 5px;
+  float: left;
+}
+.btn-strict-on {
+  background-color: rgba(255,255,0,1);
+}
+
+.control-box-row1 {
+  clear: both;
+  font-weight: bold;
+  margin-top: 40px;
+}
+
+.counter-label {
+  float: left;
+  margin-left: 50px;
+}
+
+.start-label {
+  float: left;
+  margin-left: 35px;
+}
+
+.strict-label {
+  float: left;
+  margin-left: 35px;
+}
+
+.control-box-row2 {
+  clear: both;
+  font-weight: bold;
+  margin-top: 100px;
+}
+
+.off-label {
+  float: left;
+  margin-left: 85px;
+}
+
+.btn-off {
+  background-color: black;
+  border-color: black;
+  border-style: solid;
+  border-width: 4px;
+  height: 30px;
+  width: 30px;
+  margin-left: 10px;
+  margin-top: 0px;
+  float: left;
+}
+.btn-off-off {
+  background-color: blue;
+}
+
+.btn-on {
+  background-color: blue;
+  border-color: black;
+  border-style: solid;
+  border-width: 4px;
+  height: 30px;
+  width: 30px;
+  margin-left: 0px;
+  margin-top: 0px;
+  float: left;
+}
+.btn-on-off {
+  background-color: black;
+}
+
+.on-label {
+  float: left;
+  margin-left: 10px;
+}
+
+
+.footer {
+  margin-top: 100px;
+}
