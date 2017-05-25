@@ -50,11 +50,15 @@ function buttonTimer() {
   }, 100);
 }
 
+function playSound(id) {
+  $("#audio-" + id)[0].play();
+}
+
 function handleBigButton(id) {
   if (!deviceOn || timer1 !== null) {
     return;
   }
-  $("#audio-" + id)[0].play();
+  playSound(id);
   $(".btn-" + id).addClass("btn-" + id + "-on");
   buttonTimer();
 }
@@ -155,15 +159,24 @@ function gameTimer() {
           gameTimer();
         }
         break;
+/*
       case simon.USERMOVES:
-        //break;
+        break;
       case simon.SEQFAIL:
-        //break;
+        playSound("fail");
+        clearInterval(timer2);
+        if (!strictOn) {
+          // restart game
+          runGame();
+        }
+        break;
       case simon.SEQPASSED:
-        //break;
+        break;
       case simon.ALLPASSED:
-        //break;
+        break;
+*/
       default:
+        playSound("fail");
         console.log("stopping game timer");
         clearInterval(timer2);
         break;
