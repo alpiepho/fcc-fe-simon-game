@@ -178,9 +178,6 @@ function gameTimer() {
     switch (status) {
       case simon.PLAYBACK:
         [move, newRate] = simon.next();
-        console.log("playback");
-        console.log(move);
-        console.log(newRate);
         gameButton(move);
         if (newRate != this.rate2) {
           this.rate2 = newRate;
@@ -191,10 +188,10 @@ function gameTimer() {
         break;
       case simon.SEQFAIL:
         playSound("fail");
-        clearInterval(timer2);
-        if (!strictOn) {
-          // TODO: restart game at last point
-          runGame();
+        if (strictOn) {
+          clearInterval(timer2);
+        } else {
+          simon.restart();
         }
         break;
       case simon.SEQPASSED:
@@ -206,8 +203,7 @@ function gameTimer() {
         break;
       default:
         break;
-                  }
-    console.log("at rate " + this.rate2);
+    }
   }, this.rate2);
 }
 
@@ -219,15 +215,9 @@ function runGame() {
     setCounter(simon.level());
     // get first playback
     [move, this.rate2] = simon.next();
-    console.log("start game");
-    console.log(move);
-    console.log(this.rate2);
-
-    // process first playback
     gameButton(move);
     gameTimer();
   }, this.delay2);
-
 }
 
 
@@ -270,8 +260,14 @@ class Simon {
       this._rates[i] = rate;
     }
     this._step   = 0;
-    this._steps  = 19; //1;
+    this._steps  = 5; //1;
     this._user   = 0;
+    this._status = this.PLAYBACK;
+  }
+
+  restart() {
+    this._step   = 0;
+    this._move   = 0;
     this._status = this.PLAYBACK;
   }
 
@@ -284,7 +280,7 @@ class Simon {
     this._step++;
     if (this._step >= this._steps) {
 // HACK HERE
-      this._status = this.ALLPASSED; //this.USERMOVES;
+      this._status = this.SEQFAIL; //this.USERMOVES;
     }
     return [result, rate];
   }
